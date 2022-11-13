@@ -4,5 +4,6 @@
         <page name='Main'/>
         <page name='ParallelExecution'/>
         <page name='WrappingClosureMethod'/>
+        <page name='AboutActor'/>
     </pages>
 </playground>
