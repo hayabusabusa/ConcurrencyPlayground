@@ -5,5 +5,8 @@
         <page name='ParallelExecution'/>
         <page name='WrappingClosureMethod'/>
         <page name='AboutActor'/>
+        <page name='AsyncSequence'/>
+        <page name='AsyncStream'/>
+        <page name='Task'/>
     </pages>
 </playground>
