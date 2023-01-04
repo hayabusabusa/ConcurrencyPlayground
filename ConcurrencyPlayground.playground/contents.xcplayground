@@ -10,5 +10,6 @@
         <page name='TaskGroup'/>
         <page name='CancelTask'/>
         <page name='AsyncLet'/>
+        <page name='UnstructuredConcurrency'/>
     </pages>
 </playground>
