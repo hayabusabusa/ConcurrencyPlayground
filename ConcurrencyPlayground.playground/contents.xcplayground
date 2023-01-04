@@ -9,5 +9,6 @@
         <page name='AsyncStream'/>
         <page name='TaskGroup'/>
         <page name='CancelTask'/>
+        <page name='AsyncLet'/>
     </pages>
 </playground>
