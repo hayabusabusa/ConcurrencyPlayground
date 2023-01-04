@@ -7,6 +7,6 @@
         <page name='AboutActor'/>
         <page name='AsyncSequence'/>
         <page name='AsyncStream'/>
-        <page name='Task'/>
+        <page name='TaskGroup'/>
     </pages>
 </playground>
