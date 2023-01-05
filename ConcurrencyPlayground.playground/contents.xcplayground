@@ -11,5 +11,6 @@
         <page name='CancelTask'/>
         <page name='AsyncLet'/>
         <page name='UnstructuredConcurrency'/>
+        <page name='Sendable'/>
     </pages>
 </playground>
