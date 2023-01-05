@@ -108,4 +108,43 @@ final class SendableClass: Sendable {
 /// 本来は `final` なクラスではないのでコンパイラに注意されるが、`@unchecked` がついているのでコンパイラにチェックされなくなる.
 class SendableClass2: @unchecked Sendable {}
 
+// MARK: @Sendable
+
+/// 関数を `Sendable` にしたい場合は `@Sendable` を利用する.
+@Sendable
+func someSendableFunc(_ name: String) -> String {
+    name
+}
+
+/// クロージャーに `@Sendable` を付与することもできる.
+let closure: (@Sendable (String) -> Void) = { name in }
+
+/// `@Sendable` が付与された関数のルールについて.
+///
+/// - キャプチャされるデータは `Sendable` プロトコルの準拠が必要.
+/// - 可変なローカル変数をキャプチャできなくなる.( `let` での定義が必要 )
+func nestedFunc() {
+    // 可変なローカル変数.
+    var state = 42
+
+    // 可変ローカル変数 `state` をクロージャー内で参照したのでエラーになる.
+//    let closure: (@Sendable (Int) -> Void) = { new in print(state) }
+
+    /// `Sendable` ではないクラス.
+    class NestA {
+        var string: NSString = "apple"
+    }
+
+    let nestA = NestA()
+
+    @Sendable
+    func _updateLocalState(number: Int) {
+        // 可変なローカル変数 `state` をキャプチャしようとしたのでエラー.
+//        state += number
+
+        // `let` で定義されているが `Sendable` ではないクラスなのでワーニング.
+        nestA.string = "banana"
+    }
+}
+
 //: [Next](@next)
