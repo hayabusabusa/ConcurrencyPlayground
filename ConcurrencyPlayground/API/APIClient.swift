@@ -27,6 +27,7 @@ final class APIClient {
         self.session = session
     }
 
+    @available(iOS, deprecated: 13.0, message: "Use async method.")
     func request<Request>(with request: Request,
                           completion: @escaping (Result<Request.Response?, APIClientError>) -> Void) where Request: RequestType {
         guard let urlRequest = request.makeURLRequest(for: baseURLString) else {
@@ -47,6 +48,14 @@ final class APIClient {
                 completion(.success(decoded))
             } catch {
                 completion(.failure(error as? APIClientError ?? .responseError))
+            }
+        }
+    }
+
+    func request<Request>(with request: Request) async throws -> Request.Response? where Request: RequestType {
+        try await withCheckedThrowingContinuation { continuation in
+            self.request(with: request) { result in
+                continuation.resume(with: result)
             }
         }
     }

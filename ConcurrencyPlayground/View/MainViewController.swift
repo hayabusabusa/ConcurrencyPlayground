@@ -22,6 +22,11 @@ final class MainViewController: UIViewController {
 
     // MARK: Properties
 
+    /// `MainViewModel` は `@MainActor` なのでストアドプロパティにはできない.
+    ///
+    /// ストアドプロパティにデフォルトの値が設定されているかつ、その値が Global Actor で隔離されている必要がある場合はワーニングがでる.
+    /// Main Actor は Global Actor の一種なので、ここはデフォルトの値を設定するとワーニングになる.
+    /// よってイニシャライザーでプロパティを設定するようにする.
     private let viewModel: MainViewModel
 
     private lazy var dataSource: UICollectionViewDiffableDataSource<Section, Item> = {

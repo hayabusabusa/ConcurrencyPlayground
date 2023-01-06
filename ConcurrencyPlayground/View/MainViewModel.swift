@@ -20,20 +20,24 @@ final class MainViewModel {
     }
 
     func fetchData() {
-        let request = SearchRepositoryRequest(query: "swift")
-        apiClient.request(with: request) { [weak self] result in
-            guard let self = self else { return }
-            switch result {
-            case .success(let response):
-                guard let response = response else {
-                    self.showError(.noData)
-                    return
-                }
-                let snapshot = self.makeSnapshot(from: response.items)
-                self.updateSnapshot(snapshot)
-            case .failure(let error):
-                self.showError(error)
-            }
+//        let request = SearchRepositoryRequest(query: "swift")
+//        apiClient.request(with: request) { [weak self] result in
+//            guard let self = self else { return }
+//            switch result {
+//            case .success(let response):
+//                guard let response = response else {
+//                    self.showError(.noData)
+//                    return
+//                }
+//                let snapshot = self.makeSnapshot(from: response.items)
+//                self.updateSnapshot(snapshot)
+//            case .failure(let error):
+//                self.showError(error)
+//            }
+//        }
+        Task {
+            let snapshot = try await fetchDataByConcurrency()
+            updateSnapshot(snapshot)
         }
     }
 
@@ -71,6 +75,23 @@ final class MainViewModel {
 }
 
 private extension MainViewModel {
+    /// データ取得の Concurrency 対応版.
+    ///
+    /// `@MainActor` がついているので、全てのメソッドがメインスレッドで実行されてしまうが、
+    /// データの取得をメインスレッドで実行したくないので `nonisolated` をつける.
+    nonisolated
+    func fetchDataByConcurrency() async throws -> SnapshotType {
+        let request = SearchRepositoryRequest(query: "swift")
+        do {
+            // Concurrency 対応版のメソッドを利用する.
+            let response = try await apiClient.request(with: request)
+
+            guard let response = response else { throw APIClientError.noData }
+            // `makeSnapshot(from:)` は MainActor の Actor 隔離に守られているので `nonisolated` のメソッドから実行するために `await` をつける.
+            return await makeSnapshot(from: response.items)
+        }
+    }
+
     func makeSnapshot(from repositories: [Repository]) -> SnapshotType {
         let items = repositories.map { MainViewController.Item(repository: $0, image: nil) }
         var snapshot = SnapshotType()
