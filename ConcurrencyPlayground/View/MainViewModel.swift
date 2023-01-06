@@ -30,9 +30,7 @@ final class MainViewModel {
                     return
                 }
                 let snapshot = self.makeSnapshot(from: response.items)
-                DispatchQueue.main.async {
-                    self.updateSnapshot(snapshot)
-                }
+                self.updateSnapshot(snapshot)
             case .failure(let error):
                 self.showError(error)
             }

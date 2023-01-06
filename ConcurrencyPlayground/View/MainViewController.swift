@@ -31,7 +31,7 @@ final class MainViewController: UIViewController {
             configuration.secondaryText = itemIdentifier.repository.description
             configuration.image = UIImage()
             configuration.imageProperties.cornerRadius = 4
-            configuration.imageProperties.maximumSize = CGSize(width: 60, height: 60)
+            configuration.imageProperties.maximumSize = CGSize(width: 40, height: 40)
             self?.viewModel.fetchImage(for: itemIdentifier) { image in
                 var configuration = cell.contentConfiguration as? UIListContentConfiguration
                 configuration?.image = image
@@ -86,7 +86,9 @@ private extension MainViewController {
 
     func bindViewModel() {
         viewModel.updateSnapshot = { [weak self] snapshot in
-            self?.dataSource.apply(snapshot)
+            DispatchQueue.main.async {
+                self?.dataSource.apply(snapshot)
+            }
         }
     }
 }
